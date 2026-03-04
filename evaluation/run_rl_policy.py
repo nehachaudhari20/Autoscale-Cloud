@@ -1,8 +1,9 @@
 import os
 import ray
+import torch
 
 from ray.tune.registry import register_env
-from ray.rllib.algorithms.ppo import PPO
+from ray.rllib.algorithms.ppo import PPOConfig
 
 from rl.env.autoscale_env import AutoScaleEnv
 
@@ -12,22 +13,35 @@ def env_creator(config):
 
 
 def run_rl_policy():
-    import torch
 
+    # Start Ray (keep memory small for t2.micro)
     ray.init(
         ignore_reinit_error=True,
-        object_store_memory=100 * 1024 * 1024,  # 100MB
-        _memory=300 * 1024 * 1024  # optional but safer
+        num_cpus=1
     )
 
+    # Register environment
     register_env("autoscale_env", env_creator)
 
+    # Absolute checkpoint path
     checkpoint_path = os.path.abspath("models/ppo_autoscale")
 
-    algo = PPO.from_checkpoint(checkpoint_path)
+    # Build PPO algorithm
+    config = (
+        PPOConfig()
+        .environment("autoscale_env")
+        .framework("torch")
+    )
 
+    algo = config.build()
+
+    # Restore trained weights
+    algo.restore(checkpoint_path)
+
+    # Get RL module
     module = algo.get_module()
 
+    # Create environment
     env = AutoScaleEnv()
 
     state, _ = env.reset()

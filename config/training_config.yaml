@@ -1,0 +1,5 @@
+algorithm: PPO
+learning_rate: 0.0003
+gamma: 0.99
+train_batch_size: 4000
+num_workers: 2

@@ -1,0 +1,4 @@
+instance_capacity: 100
+max_instances: 10
+min_instances: 1
+latency_base: 50

@@ -1,0 +1,8 @@
+{
+  "pattern": "spike",
+  "duration": 600,
+  "base_rate": 100,
+  "spike_rate": 900,
+  "spike_start": 250,
+  "spike_end": 280
+}

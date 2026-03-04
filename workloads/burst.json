@@ -1,0 +1,8 @@
+{
+  "pattern": "burst",
+  "duration": 600,
+  "base_rate": 100,
+  "burst_rate": 400,
+  "burst_start": 200,
+  "burst_end": 300
+}

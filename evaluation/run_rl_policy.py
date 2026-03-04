@@ -14,7 +14,11 @@ def env_creator(config):
 def run_rl_policy():
     import torch
 
-    ray.init(ignore_reinit_error=True)
+    ray.init(
+        ignore_reinit_error=True,
+        object_store_memory=100 * 1024 * 1024,  # 100MB
+        _memory=300 * 1024 * 1024  # optional but safer
+    )
 
     register_env("autoscale_env", env_creator)
 

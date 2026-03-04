@@ -17,7 +17,8 @@ def run_rl_policy():
     # Start Ray (keep memory small for t2.micro)
     ray.init(
         ignore_reinit_error=True,
-        num_cpus=1
+        object_store_memory=100 * 1024 * 1024,
+        _memory=300 * 1024 * 1024
     )
 
     # Register environment

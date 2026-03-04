@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# virtual env
+venv/
+.env
+
+# Ray logs
+ray_results/
+
+# Streamlit
+.streamlit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Models
+models/
+
+# logs
+logs/
+
+# database
+*.db
+
+# IDE
+.vscode/
+.idea/

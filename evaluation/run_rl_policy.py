@@ -1,6 +1,5 @@
 import os
 import ray
-import torch
 
 from ray.tune.registry import register_env
 from ray.rllib.algorithms.ppo import PPO
@@ -13,6 +12,7 @@ def env_creator(config):
 
 
 def run_rl_policy():
+    import torch
 
     ray.init(ignore_reinit_error=True)
 

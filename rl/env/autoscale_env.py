@@ -1,6 +1,7 @@
 import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
+import os
 
 from rl.env.simulator import WorkloadGenerator, CloudSimulator
 
@@ -8,8 +9,22 @@ from rl.env.simulator import WorkloadGenerator, CloudSimulator
 class AutoScaleEnv(gym.Env):
 
     def __init__(self, workload_file="workloads/burst.json"):
-
+        """
+        Initialize the AutoScale environment.
+        
+        Args:
+            workload_file: Path to workload JSON file. Can also be an EnvContext 
+                          (from Ray RLlib), in which case we use the default.
+        """
         super(AutoScaleEnv, self).__init__()
+
+        # Handle Ray RLlib EnvContext - it passes an EnvContext object instead of string
+        if not isinstance(workload_file, str):
+            workload_file = "workloads/burst.json"
+
+        # Convert to absolute path if needed
+        if not os.path.isabs(workload_file):
+            workload_file = os.path.join(os.getcwd(), workload_file)
 
         self.generator = WorkloadGenerator(workload_file)
         self.simulator = CloudSimulator()
@@ -109,3 +124,9 @@ if __name__ == "__main__":
         if done:
             break
 
+
+# Register the environment with Gymnasium
+gym.register(
+    id="AutoScale-v0",
+    entry_point="rl.env.autoscale_env:AutoScaleEnv",
+)

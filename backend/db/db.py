@@ -1,13 +1,16 @@
 import psycopg2
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_connection():
     conn = psycopg2.connect(
-        host="autoscale-db.cwngcomm4d6a.us-east-1.rds.amazonaws.com",
-        database="postgres",
-        user="postgres",
-        password="testrdsaws",
-        port=5432,
+        host=os.getenv("DB_HOST"),
+        database=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        port=os.getenv("DB_PORT"),
         sslmode="verify-ca",
         sslrootcert=os.path.join(os.path.dirname(__file__), "rds-ca.pem")
     )

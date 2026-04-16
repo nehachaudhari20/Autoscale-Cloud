@@ -4,6 +4,7 @@ import torch
 
 from ray.tune.registry import register_env
 from ray.rllib.algorithms.ppo import PPOConfig
+from backend.db.insert_results import insert_result
 
 from rl.env.autoscale_env import AutoScaleEnv
 
@@ -24,10 +25,8 @@ def run_rl_policy():
     # Register environment
     register_env("autoscale_env", env_creator)
 
-    # Absolute checkpoint path
     checkpoint_path = os.path.abspath("models/ppo_autoscale")
 
-    # Build PPO algorithm
     config = (
         PPOConfig()
         .environment("autoscale_env")
@@ -39,10 +38,8 @@ def run_rl_policy():
     # Restore trained weights
     algo.restore(checkpoint_path)
 
-    # Get RL module
     module = algo.get_module()
 
-    # Create environment
     env = AutoScaleEnv()
 
     state, _ = env.reset()
@@ -73,4 +70,18 @@ def run_rl_policy():
         cost = env.instances * 0.1
         costs.append(cost)
 
+    # ✅ CALCULATE METRICS
+    avg_latency = sum(latencies) / len(latencies)
+    avg_instances = sum(instances) / len(instances)
+    total_cost = sum(costs)
+
+    # ✅ STORE IN DATABASE (safe)
+    try:
+        insert_result("RL", avg_latency, avg_instances, total_cost)
+        print("✅ Results stored in DB")
+    except Exception as e:
+        print("❌ DB insert failed:", e)
+
+    # return for dashboard use
     return latencies, instances, costs
+

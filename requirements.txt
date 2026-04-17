@@ -8,7 +8,7 @@ pydantic
 # RL and simulation
 gymnasium
 ray[rllib]
-torch
+#torch
 
 # Data processing
 numpy

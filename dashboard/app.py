@@ -5,6 +5,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from backend.db.fetch_results import fetch_results
+import pandas as pd
+import streamlit as st
 
 from evaluation.baselines import run_static_scaling, run_threshold_scaling
 from evaluation.run_rl_policy import run_rl_policy
